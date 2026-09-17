@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petualangan Ekonomi Kuliner Magetan - IPAS Kelas 5 SD</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        fredoka: ['Fredoka', 'sans-serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        magetan: {
+                            green: '#10b981',
+                            orange: '#f97316',
+                            amber: '#f59e0b',
+                            blue: '#0284c7',
+                            purple: '#8b5cf6',
+                            red: '#ef4444'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #e0f2fe 0%, #f0fdf4 50%, #fef3c7 100%);
+            min-height: 100vh;
+            user-select: none;
+        }
+        .font-game {
+            font-family: 'Fredoka', cursive;
+        }
+        .btn-bounce {
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .btn-bounce:hover {
+            transform: translateY(-3px) scale(1.02);
+        }
+        .btn-bounce:active {
+            transform: translateY(1px) scale(0.98);
+        }
+        .card-shadow {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+            100% { transform: translateY(0px); }
+        }
+        .floating-element {
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 15px rgba(249, 115, 22, 0.4); }
+            50% { box-shadow: 0 0 25px rgba(249, 115, 22, 0.8); }
+        }
+        .pulse-glow {
+            animation: pulse-glow 2s infinite;
+        }
+        @keyframes sizzle {
+            0% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.05) rotate(-2deg); }
+            75% { transform: scale(1.05) rotate(2deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+        .sizzle-anim {
+            animation: sizzle 0.4s ease-in-out infinite;
+        }
+        .drop-target-active {
+            border-color: #10b981 !important;
+            background-color: #ecfdf5 !important;
+            transform: scale(1.03);
+        }
+    </style>
+</head>
+<body class="text-slate-800 flex flex-col min-h-screen">
+
+    <!-- Top Navigation Bar -->
+    <header class="bg-white/90 backdrop-blur-md border-b border-emerald-100 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('home')">
+                <div class="bg-gradient-to-tr from-emerald-500 to-teal-400 p-2.5 rounded-2xl text-white shadow-md shadow-emerald-200">
+                    <i class="fa-solid fa-utensils text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-game text-xl md:text-2xl font-bold text-slate-800 tracking-wide leading-tight">
+                        EKO-KULINER <span class="text-emerald-600">MAGETAN</span>
+                    </h1>
+                    <p class="text-xs text-slate-500 font-semibold">IPAS Kelas 5 SD • Kegiatan Ekonomi Daerahku</p>
+                </div>
+            </div>
+
+            <!-- Stats Bar & Sound Toggle -->
+            <div class="flex items-center gap-3">
+                <div class="bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-full flex items-center gap-2 text-amber-700 font-game text-sm shadow-sm">
+                    <i class="fa-solid fa-coins text-amber-500 text-lg"></i>
+                    <span id="player-coins" class="font-bold">100</span> Poin
+                </div>
+                <div class="bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-full flex items-center gap-2 text-emerald-700 font-game text-sm shadow-sm hidden sm:flex">
+                    <i class="fa-solid fa-award text-emerald-500 text-lg"></i>
+                    <span id="player-badge">Pemula</span>
+                </div>
+                <button id="music-btn" onclick="toggleBGM()" class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 border border-slate-300 flex items-center justify-center text-slate-600 text-lg transition" title="Musik Latar">
+                    <i class="fa-solid fa-music text-slate-400" id="music-icon"></i>
+                </button>
+                <button id="sound-btn" onclick="toggleAudio()" class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 border border-slate-300 flex items-center justify-center text-slate-600 text-lg transition" title="Efek Suara">
+                    <i class="fa-solid fa-volume-high" id="sound-icon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Navigation Tabs -->
+    <nav class="bg-white/80 border-b border-slate-200 shadow-sm sticky top-[65px] z-40 backdrop-blur-sm">
+        <div class="max-w-4xl mx-auto flex justify-around p-1.5">
+            <button onclick="switchTab('home')" id="tab-home" class="nav-btn flex-1 py-2 px-2 md:px-4 rounded-xl font-game text-sm md:text-base flex items-center justify-center gap-2 transition text-emerald-600 bg-emerald-50 font-bold border border-emerald-200">
+                <i class="fa-solid fa-house"></i>
+                <span class="hidden sm:inline">Beranda</span>
+            </button>
+            <button onclick="switchTab('materi')" id="tab-materi" class="nav-btn flex-1 py-2 px-2 md:px-4 rounded-xl font-game text-sm md:text-base flex items-center justify-center gap-2 transition text-slate-600 hover:bg-slate-100">
+                <i class="fa-solid fa-book-open"></i>
+                <span class="hidden sm:inline">Materi IPAS</span>
+            </button>
+            <button onclick="switchTab('sortier')" id="tab-sortier" class="nav-btn flex-1 py-2 px-2 md:px-4 rounded-xl font-game text-sm md:text-base flex items-center justify-center gap-2 transition text-slate-600 hover:bg-slate-100">
+                <i class="fa-solid fa-layer-group"></i>
+                <span class="hidden sm:inline">Game Pemilah</span>
+            </button>
+            <button onclick="switchTab('simulasi')" id="tab-simulasi" class="nav-btn flex-1 py-2 px-2 md:px-4 rounded-xl font-game text-sm md:text-base flex items-center justify-center gap-2 transition text-slate-600 hover:bg-slate-100">
+                <i class="fa-solid fa-store"></i>
+                <span class="hidden sm:inline">Simulasi Warung</span>
+            </button>
+            <button onclick="switchTab('kuis')" id="tab-kuis" class="nav-btn flex-1 py-2 px-2 md:px-4 rounded-xl font-game text-sm md:text-base flex items-center justify-center gap-2 transition text-slate-600 hover:bg-slate-100">
+                <i class="fa-solid fa-circle-question"></i>
+                <span class="hidden sm:inline">Kuis Evaluasi</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="max-w-5xl mx-auto px-4 py-6 flex-1 w-full">
+
+        <!-- TAB 1: HOME / BERANDA -->
+        <section id="page-home" class="space-y-6">
+            <!-- Hero Banner -->
+            <div class="relative bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-700 rounded-3xl p-6 md:p-8 text-white overflow-hidden shadow-xl">
+                <div class="absolute -right-10 -bottom-10 opacity-15 pointer-events-none">
+                    <i class="fa-solid fa-bowl-food text-[240px]"></i>
+                </div>
+                <div class="relative z-10 max-w-2xl">
+                    <span class="bg-amber-400 text-amber-950 font-game text-xs md:text-sm font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-3 inline-block shadow">
+                        📍 Jelajah Kabupaten Magetan
+                    </span>
+                    <h2 class="font-game text-2xl md:text-4xl font-extrabold mb-3 leading-tight">
+                        Petualangan Kegiatan Ekonomi di Daerahku!
+                    </h2>
+                    <p class="text-emerald-50 text-sm md:text-base mb-6 leading-relaxed">
+                        Pelajari bagaimana masyarakat Magetan memproduksi makanan khas seperti **Ayam Panggang Gandu**, **Jeruk Pamelo**, dan **Lempeng Puli**, mendistribusikannya ke wisatawan Telaga Sarangan, hingga dikonsumsi pelanggan!
+                    </p>
+                    <div class="flex flex-wrap gap-3">
+                        <button onclick="switchTab('materi')" class="btn-bounce bg-amber-400 hover:bg-amber-300 text-amber-950 font-game font-bold px-6 py-3 rounded-2xl shadow-lg flex items-center gap-2 text-base">
+                            <i class="fa-solid fa-circle-play text-xl"></i> Mulai Belajar
+                        </button>
+                        <button onclick="switchTab('simulasi')" class="btn-bounce bg-white/20 hover:bg-white/30 text-white font-game font-bold px-6 py-3 rounded-2xl backdrop-blur-md border border-white/30 flex items-center gap-2 text-base">
+                            <i class="fa-solid fa-store"></i> Main Simulasi Warung
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Learning Objective & Quick Menu Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div onclick="switchTab('materi')" class="btn-bounce bg-white p-5 rounded-2xl border border-slate-100 card-shadow cursor-pointer hover:border-emerald-300 group">
+                    <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-book"></i>
+                    </div>
+                    <h3 class="font-game text-lg font-bold text-slate-800 mb-1">1. Modul IPAS</h3>
+                    <p class="text-xs text-slate-500">Pahami konsep Produksi, Distribusi, dan Konsumsi melalui contoh lokal Magetan.</p>
+                </div>
+
+                <div onclick="switchTab('sortier')" class="btn-bounce bg-white p-5 rounded-2xl border border-slate-100 card-shadow cursor-pointer hover:border-sky-300 group">
+                    <div class="w-12 h-12 bg-sky-100 text-sky-600 rounded-xl flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-boxes-packing"></i>
+                    </div>
+                    <h3 class="font-game text-lg font-bold text-slate-800 mb-1">2. Game Pemilah</h3>
+                    <p class="text-xs text-slate-500">Uji ketangkasanmu mengelompokkan kegiatan para pelaku ekonomi Magetan!</p>
+                </div>
+
+                <div onclick="switchTab('simulasi')" class="btn-bounce bg-white p-5 rounded-2xl border border-slate-100 card-shadow cursor-pointer hover:border-amber-300 group">
+                    <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-xl flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-shop"></i>
+                    </div>
+                    <h3 class="font-game text-lg font-bold text-slate-800 mb-1">3. Simulasi Wirausaha</h3>
+                    <p class="text-xs text-slate-500">Jadilah pengusaha kuliner khas Magetan di Telaga Sarangan dan kumpulkan untung!</p>
+                </div>
+            </div>
+
+            <!-- Special Spotlight Magetan Culinary -->
+            <div class="bg-white rounded-3xl p-6 border border-slate-200 card-shadow">
+                <h3 class="font-game text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-map-pin text-emerald-600"></i> Kuliner Khas Magetan dalam Rantai Ekonomi
+                </h3>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <div class="bg-emerald-50/70 p-4 rounded-2xl border border-emerald-100 text-center">
+                        <div class="text-3xl mb-2">🍗</div>
+                        <h4 class="font-game text-sm font-bold text-slate-800">Ayam Panggang Gandu</h4>
+                        <p class="text-[11px] text-slate-500 mt-1">Dipelopori warga Karangrejo, dipanggang tradisional kayu bakar.</p>
+                    </div>
+                    <div class="bg-orange-50/70 p-4 rounded-2xl border border-orange-100 text-center">
+                        <div class="text-3xl mb-2">🍊</div>
+                        <h4 class="font-game text-sm font-bold text-slate-800">Jeruk Pamelo Magetan</h4>
+                        <p class="text-[11px] text-slate-500 mt-1">Buah khas daerah Sukomoro & Bendo yang manis dan segar.</p>
+                    </div>
+                    <div class="bg-amber-50/70 p-4 rounded-2xl border border-amber-100 text-center">
+                        <div class="text-3xl mb-2">🍘</div>
+                        <h4 class="font-game text-sm font-bold text-slate-800">Lempeng / Kerupuk Puli</h4>
+                        <p class="text-[11px] text-slate-500 mt-1">Kerupuk olahan beras khas Magetan yang gurih dan renyah.</p>
+                    </div>
+                    <div class="bg-purple-50/70 p-4 rounded-2xl border border-purple-100 text-center">
+                        <div class="text-3xl mb-2">🍢</div>
+                        <h4 class="font-game text-sm font-bold text-slate-800">Sate Kelinci Sarangan</h4>
+                        <p class="text-[11px] text-slate-500 mt-1">Sajian favorit para wisatawan di tepian Telaga Sarangan.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: MATERI IPAS -->
+        <section id="page-materi" class="space-y-6 hidden">
+            <div class="bg-white rounded-3xl p-6 md:p-8 border border-slate-200 card-shadow">
+                <div class="border-b border-slate-100 pb-4 mb-6">
+                    <span class="text-xs font-bold font-game uppercase tracking-wider text-emerald-600 bg-emerald-100 px-3 py-1 rounded-full">Modul Pembelajaran IPAS Kelas 5</span>
+                    <h2 class="font-game text-2xl md:text-3xl font-bold text-slate-800 mt-2">3 Tiga Tipe Kegiatan Ekonomi</h2>
+                    <p class="text-slate-600 text-sm">Kegiatan ekonomi adalah semua kegiatan yang dilakukan manusia untuk memenuhi kebutuhan hidupnya.</p>
+                </div>
+
+                <!-- 3 Pillars Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <!-- Produksi -->
+                    <div class="bg-gradient-to-b from-emerald-50 to-white p-5 rounded-2xl border-2 border-emerald-200 relative">
+                        <div class="absolute -top-3 right-4 bg-emerald-500 text-white font-game text-xs font-bold px-3 py-1 rounded-full shadow">1. PRODUKSI</div>
+                        <div class="text-4xl mb-3 text-emerald-600"><i class="fa-solid fa-industry"></i></div>
+                        <h3 class="font-game text-lg font-bold text-slate-800">PRODUKSI</h3>
+                        <p class="text-xs text-slate-600 mt-2 mb-3">Kegiatan **menghasilkan** atau **membuat** barang/jasa.</p>
+                        <div class="bg-emerald-100/60 p-2.5 rounded-xl text-xs text-emerald-900">
+                            <strong>Pelakunya:</strong> PRODUSEN<br>
+                            <strong>Contoh di Magetan:</strong> Petani jeruk panen Pamelo Kalbagor, pembuat Ayam Panggang Gandu Karangrejo.
+                        </div>
+                    </div>
+
+                    <!-- Distribusi -->
+                    <div class="bg-gradient-to-b from-sky-50 to-white p-5 rounded-2xl border-2 border-sky-200 relative">
+                        <div class="absolute -top-3 right-4 bg-sky-500 text-white font-game text-xs font-bold px-3 py-1 rounded-full shadow">2. DISTRIBUSI</div>
+                        <div class="text-4xl mb-3 text-sky-600"><i class="fa-solid fa-truck-fast"></i></div>
+                        <h3 class="font-game text-lg font-bold text-slate-800">DISTRIBUSI</h3>
+                        <p class="text-xs text-slate-600 mt-2 mb-3">Kegiatan **menyalurkan** barang dari produsen ke konsumen.</p>
+                        <div class="bg-sky-100/60 p-2.5 rounded-xl text-xs text-sky-900">
+                            <strong>Pelakunya:</strong> DISTRIBUTOR<br>
+                            <strong>Contoh di Magetan:</strong> Kurir mengantar Lempeng Puli ke pasar, pedagang oleh-oleh Jalan Sawo Magetan.
+                        </div>
+                    </div>
+
+                    <!-- Konsumsi -->
+                    <div class="bg-gradient-to-b from-amber-50 to-white p-5 rounded-2xl border-2 border-amber-200 relative">
+                        <div class="absolute -top-3 right-4 bg-amber-500 text-white font-game text-xs font-bold px-3 py-1 rounded-full shadow">3. KONSUMSI</div>
+                        <div class="text-4xl mb-3 text-amber-600"><i class="fa-solid fa-utensils"></i></div>
+                        <h3 class="font-game text-lg font-bold text-slate-800">KONSUMSI</h3>
+                        <p class="text-xs text-slate-600 mt-2 mb-3">Kegiatan **menggunakan** atau **menghabiskan** barang/jasa.</p>
+                        <div class="bg-amber-100/60 p-2.5 rounded-xl text-xs text-amber-900">
+                            <strong>Pelakunya:</strong> KONSUMEN<br>
+                            <strong>Contoh di Magetan:</strong> Wisatawan memakan sate kelinci di tepi Telaga Sarangan, pembeli makan jeruk pamelo.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Visual Example Flow -->
+                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+                    <h3 class="font-game text-lg font-bold text-slate-800 mb-4 text-center">
+                        🔄 Contoh Rantai Ekonomi Kuliner Ayam Panggang Gandu Magetan
+                    </h3>
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-center">
+                        <div class="bg-white p-4 rounded-xl border border-slate-200 flex-1 w-full shadow-sm">
+                            <div class="text-3xl mb-1">🔥</div>
+                            <span class="text-xs font-bold text-emerald-600 uppercase">Tahap 1: Produksi</span>
+                            <p class="text-xs text-slate-700 font-semibold mt-1">Ibu Pembuat Ayam Panggang Bumbu Merah/Rujak</p>
+                        </div>
+                        <i class="fa-solid fa-arrow-right text-slate-400 text-xl hidden md:block"></i>
+                        <i class="fa-solid fa-arrow-down text-slate-400 text-xl md:hidden"></i>
+                        <div class="bg-white p-4 rounded-xl border border-slate-200 flex-1 w-full shadow-sm">
+                            <div class="text-3xl mb-1">🛵</div>
+                            <span class="text-xs font-bold text-sky-600 uppercase">Tahap 2: Distribusi</span>
+                            <p class="text-xs text-slate-700 font-semibold mt-1">Pengiriman via Kurir / Dijual di Warung Lesehan</p>
+                        </div>
+                        <i class="fa-solid fa-arrow-right text-slate-400 text-xl hidden md:block"></i>
+                        <i class="fa-solid fa-arrow-down text-slate-400 text-xl md:hidden"></i>
+                        <div class="bg-white p-4 rounded-xl border border-slate-200 flex-1 w-full shadow-sm">
+                            <div class="text-3xl mb-1">😋</div>
+                            <span class="text-xs font-bold text-amber-600 uppercase">Tahap 3: Konsumsi</span>
+                            <p class="text-xs text-slate-700 font-semibold mt-1">Wisatawan Memakan Ayam Panggang Bersama Keluarga</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: GAME PEMILAH (SORTING GAME) -->
+        <section id="page-sortier" class="space-y-6 hidden">
+            <div class="bg-white rounded-3xl p-6 md:p-8 border border-slate-200 card-shadow">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-100 pb-4 mb-6">
+                    <div>
+                        <span class="text-xs font-bold font-game uppercase tracking-wider text-sky-600 bg-sky-100 px-3 py-1 rounded-full">Mini Game #1</span>
+                        <h2 class="font-game text-2xl font-bold text-slate-800 mt-1">Tebak & Pemilah Kegiatan Ekonomi Magetan</h2>
+                        <p class="text-xs text-slate-500">Klik tombol jawaban atau **seret (drag)** kartu ke wadah yang tepat!</p>
+                    </div>
+                    <div class="bg-slate-100 px-4 py-2 rounded-2xl flex items-center gap-4 text-sm font-game">
+                        <div>Skor: <span id="sortier-score" class="text-emerald-600 font-bold text-lg">0</span>/10</div>
+                        <div>Combo: <span id="sortier-combo" class="text-amber-500 font-bold text-lg">x0</span></div>
+                        <div>Sisa Kartu: <span id="sortier-cards-left" class="text-sky-600 font-bold text-lg">10</span></div>
+                    </div>
+                </div>
+
+                <!-- Active Card Container -->
+                <div id="sortier-card-area" class="bg-gradient-to-tr from-sky-50 via-indigo-50 to-emerald-50 p-6 md:p-8 rounded-3xl border-2 border-dashed border-slate-300 text-center mb-8 relative">
+                    <div id="sortier-card" draggable="true" ondragstart="handleDragStart(event)" class="bg-white p-6 rounded-2xl border-2 border-sky-300 shadow-xl max-w-md mx-auto transition-all transform duration-300 cursor-grab active:cursor-grabbing hover:scale-105">
+                        <div class="text-xs text-slate-400 font-game mb-1">✋ Geser atau Tekan Tombol di Bawah</div>
+                        <div id="sortier-icon" class="text-5xl mb-3">🍊</div>
+                        <h3 id="sortier-title" class="font-game text-lg font-bold text-slate-800 mb-2">Pak Ahmad memetik Jeruk Pamelo di kebun Sukomoro Magetan.</h3>
+                        <p id="sortier-desc" class="text-xs text-slate-500">Termasuk kategori manakah kegiatan ini?</p>
+                    </div>
+                </div>
+
+                <!-- Target Bins (Droppable zones) -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 'PRODUKSI')" onclick="checkSortAnswer('PRODUKSI')" class="btn-bounce bg-emerald-50 hover:bg-emerald-100 border-2 border-emerald-400 p-5 rounded-2xl text-center group cursor-pointer transition">
+                        <div class="w-12 h-12 bg-emerald-500 text-white rounded-xl flex items-center justify-center text-xl mx-auto mb-2 shadow group-hover:scale-110 transition">
+                            <i class="fa-solid fa-industry"></i>
+                        </div>
+                        <h4 class="font-game font-bold text-emerald-800">1. PRODUKSI</h4>
+                        <p class="text-[11px] text-emerald-600">Menghasilkan / Membuat</p>
+                    </div>
+
+                    <div ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 'DISTRIBUSI')" onclick="checkSortAnswer('DISTRIBUSI')" class="btn-bounce bg-sky-50 hover:bg-sky-100 border-2 border-sky-400 p-5 rounded-2xl text-center group cursor-pointer transition">
+                        <div class="w-12 h-12 bg-sky-500 text-white rounded-xl flex items-center justify-center text-xl mx-auto mb-2 shadow group-hover:scale-110 transition">
+                            <i class="fa-solid fa-truck-fast"></i>
+                        </div>
+                        <h4 class="font-game font-bold text-sky-800">2. DISTRIBUSI</h4>
+                        <p class="text-[11px] text-sky-600">Menyalurkan / Mengantar</p>
+                    </div>
+
+                    <div ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 'KONSUMSI')" onclick="checkSortAnswer('KONSUMSI')" class="btn-bounce bg-amber-50 hover:bg-amber-100 border-2 border-amber-400 p-5 rounded-2xl text-center group cursor-pointer transition">
+                        <div class="w-12 h-12 bg-amber-500 text-white rounded-xl flex items-center justify-center text-xl mx-auto mb-2 shadow group-hover:scale-110 transition">
+                            <i class="fa-solid fa-utensils"></i>
+                        </div>
+                        <h4 class="font-game font-bold text-amber-800">3. KONSUMSI</h4>
+                        <p class="text-[11px] text-amber-600">Menggunakan / Memakan</p>
+                    </div>
+                </div>
+
+                <!-- Feedback Toast -->
+                <div id="sortier-feedback" class="mt-6 p-4 rounded-2xl text-center font-game text-sm hidden"></div>
+            </div>
+        </section>
+
+        <!-- TAB 4: SIMULASI WIRAUSAHA (SIMULASI WARUNG) -->
+        <section id="page-simulasi" class="space-y-6 hidden">
+            <div class="bg-white rounded-3xl p-6 md:p-8 border border-slate-200 card-shadow">
+                <!-- Header -->
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-100 pb-4 mb-6">
+                    <div>
+                        <span class="text-xs font-bold font-game uppercase tracking-wider text-amber-600 bg-amber-100 px-3 py-1 rounded-full">Mini Game #2 • Tycoon Interactive</span>
+                        <h2 class="font-game text-2xl font-bold text-slate-800 mt-1">Warung Kuliner Telaga Sarangan</h2>
+                        <p class="text-xs text-slate-500">Masak kuliner khas Magetan, distribusikan, dan layani wisatawan sebelum waktu habis!</p>
+                    </div>
+                    <div class="bg-amber-50 border border-amber-200 px-4 py-2 rounded-2xl flex items-center gap-3 text-amber-900 font-game text-sm">
+                        <i class="fa-solid fa-store text-amber-500 text-xl"></i>
+                        <div>
+                            <div>Kas Warung: <strong id="sim-money" class="text-emerald-600 text-lg">Rp 150.000</strong></div>
+                            <div class="text-[11px] text-slate-500">Wisatawan Dilayani: <span id="sim-served-count" class="font-bold text-amber-600">0</span> orang</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Simulation Stepper -->
+                <div class="grid grid-cols-3 gap-2 mb-6 text-center font-game text-xs md:text-sm">
+                    <div id="step-btn-1" class="p-2.5 rounded-xl bg-emerald-500 text-white font-bold shadow">1. PRODUKSI (Masak)</div>
+                    <div id="step-btn-2" class="p-2.5 rounded-xl bg-slate-100 text-slate-500 font-bold">2. DISTRIBUSI (Jual)</div>
+                    <div id="step-btn-3" class="p-2.5 rounded-xl bg-slate-100 text-slate-500 font-bold">3. KONSUMSI (Hasil)</div>
+                </div>
+
+                <!-- Step 1: PRODUKSI PANEL -->
+                <div id="sim-step-1" class="space-y-4">
+                    <h3 class="font-game text-lg font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-fire text-amber-500"></i> Tahap 1: Pilih Beli Bahan & Produksi
+                    </h3>
+                    <p class="text-xs text-slate-600">Pilih hidangan yang ingin kamu olah dari hasil pertanian / peternakan lokal Magetan:</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Menu 1 -->
+                        <div class="bg-amber-50/50 p-4 rounded-2xl border border-amber-200 hover:border-amber-400 transition">
+                            <div class="text-4xl mb-2 text-center">🍗</div>
+                            <h4 class="font-game font-bold text-slate-800 text-center">Ayam Panggang Gandu</h4>
+                            <p class="text-[11px] text-slate-500 text-center my-2">Bumbu Rujak pedas manis dipanggang kayu bakar.</p>
+                            <div class="bg-white p-2.5 rounded-xl text-xs space-y-1 mb-3">
+                                <div class="flex justify-between"><span>Modal Bahan:</span> <strong>Rp 30.000</strong></div>
+                                <div class="flex justify-between text-emerald-600"><span>Harga Jual:</span> <strong>Rp 50.000</strong></div>
+                            </div>
+                            <button onclick="startCookingMinigame('Ayam Panggang Gandu', 30000, 50000, '🍗')" class="w-full btn-bounce bg-amber-500 hover:bg-amber-600 text-white font-game text-xs font-bold py-2 rounded-xl shadow">
+                                Masak Menu Ini
+                            </button>
+                        </div>
+
+                        <!-- Menu 2 -->
+                        <div class="bg-orange-50/50 p-4 rounded-2xl border border-orange-200 hover:border-orange-400 transition">
+                            <div class="text-4xl mb-2 text-center">🍊</div>
+                            <h4 class="font-game font-bold text-slate-800 text-center">Es Jus Jeruk Pamelo</h4>
+                            <p class="text-[11px] text-slate-500 text-center my-2">Jeruk pamelo segar dipetik dari kebun Bendo.</p>
+                            <div class="bg-white p-2.5 rounded-xl text-xs space-y-1 mb-3">
+                                <div class="flex justify-between"><span>Modal Bahan:</span> <strong>Rp 15.000</strong></div>
+                                <div class="flex justify-between text-emerald-600"><span>Harga Jual:</span> <strong>Rp 30.000</strong></div>
+                            </div>
+                            <button onclick="startCookingMinigame('Es Jus Jeruk Pamelo', 15000, 30000, '🍊')" class="w-full btn-bounce bg-orange-500 hover:bg-orange-600 text-white font-game text-xs font-bold py-2 rounded-xl shadow">
+                                Masak Menu Ini
+                            </button>
+                        </div>
+
+                        <!-- Menu 3 -->
+                        <div class="bg-emerald-50/50 p-4 rounded-2xl border border-emerald-200 hover:border-emerald-400 transition">
+                            <div class="text-4xl mb-2 text-center">🍘</div>
+                            <h4 class="font-game font-bold text-slate-800 text-center">Lempeng Puli Renyah</h4>
+                            <p class="text-[11px] text-slate-500 text-center my-2">Kerupuk puli goreng khas olahan beras lokal.</p>
+                            <div class="bg-white p-2.5 rounded-xl text-xs space-y-1 mb-3">
+                                <div class="flex justify-between"><span>Modal Bahan:</span> <strong>Rp 10.000</strong></div>
+                                <div class="flex justify-between text-emerald-600"><span>Harga Jual:</span> <strong>Rp 20.000</strong></div>
+                            </div>
+                            <button onclick="startCookingMinigame('Lempeng Puli Renyah', 10000, 20000, '🍘')" class="w-full btn-bounce bg-emerald-500 hover:bg-emerald-600 text-white font-game text-xs font-bold py-2 rounded-xl shadow">
+                                Masak Menu Ini
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Mini Cooking Interactive Modal / Area -->
+                    <div id="cooking-area" class="hidden bg-gradient-to-tr from-amber-100 via-orange-50 to-amber-50 p-6 rounded-3xl border-2 border-amber-300 text-center space-y-4">
+                        <div id="cook-food-icon" class="text-6xl sizzle-anim">🍗</div>
+                        <h4 class="font-game text-lg font-bold text-slate-800">Sedang Memasak <span id="cook-food-name">Ayam Panggang</span>...</h4>
+                        <p class="text-xs text-slate-600">Tekan tombol **"Kipas / Aduk"** beberapa kali sampai matang sempurna (100%)!</p>
+                        
+                        <!-- Progress Bar -->
+                        <div class="w-full max-w-md mx-auto bg-slate-200 h-6 rounded-full overflow-hidden border border-slate-300 p-1">
+                            <div id="cook-progress-bar" class="bg-gradient-to-r from-amber-500 to-emerald-500 h-full rounded-full transition-all duration-150" style="width: 0%"></div>
+                        </div>
+
+                        <button onclick="tapCookAction()" class="btn-bounce bg-amber-500 hover:bg-amber-600 active:scale-95 text-white font-game font-bold px-8 py-3 rounded-2xl shadow-lg text-base pulse-glow">
+                            🔥 KIPAS & ADUK SEKARANG! (+25%)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 2: DISTRIBUSI & SERVING PANEL -->
+                <div id="sim-step-2" class="space-y-4 hidden">
+                    <h3 class="font-game text-lg font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-truck-fast text-sky-500"></i> Tahap 2: Salurkan & Layani Wisatawan Sarangan
+                    </h3>
+                    <p class="text-xs text-slate-600">Wisatawan berdatangan ke Telaga Sarangan! Tekan tombol **"Sajikan Hidangan"** untuk menyalurkan kuliner <strong id="selected-menu-name" class="text-emerald-600">--</strong> kepada pembeli!</p>
+
+                    <!-- Interactive Customer Queue -->
+                    <div class="bg-sky-50/70 p-6 rounded-3xl border border-sky-200">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="font-game text-sm font-bold text-sky-900">Antrean Wisatawan (Konsumen):</span>
+                            <span class="text-xs text-slate-500 font-game">Sisa Waktu Jualan: <strong id="sim-timer" class="text-red-500 text-base">15</strong> detik</span>
+                        </div>
+
+                        <div id="customer-cards-container" class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+                            <!-- Customers populated dynamically -->
+                        </div>
+
+                        <div class="text-center">
+                            <button id="serve-btn" onclick="serveCustomerInteractive()" class="btn-bounce bg-emerald-500 hover:bg-emerald-600 text-white font-game font-bold px-8 py-3 rounded-2xl shadow-lg text-base">
+                                🍽️ Sajikan Hidangan ke Wisatawan (+Rp <span id="serve-price">50.000</span>)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: KONSUMSI & HASIL -->
+                <div id="sim-step-3" class="space-y-4 hidden text-center">
+                    <div class="bg-emerald-50 p-6 rounded-3xl border border-emerald-200 max-w-md mx-auto">
+                        <div class="text-5xl mb-2">😋🎉</div>
+                        <h3 class="font-game text-xl font-bold text-slate-800">Konsumen Sangat Puas!</h3>
+                        <p class="text-xs text-slate-600 mt-1 mb-4">Wisatawan Telaga Sarangan menikmati hidanganmu dan memberikan ulasan bintang 5!</p>
+
+                        <div class="bg-white p-4 rounded-2xl space-y-2 text-xs font-game border border-slate-200 mb-4">
+                            <div class="flex justify-between"><span>Jumlah Porsi Terjual:</span> <strong id="res-count" class="text-slate-800">0 Porsi</strong></div>
+                            <div class="flex justify-between"><span>Total Penjualan Kotor:</span> <strong id="res-gross" class="text-slate-800">Rp 0</strong></div>
+                            <div class="flex justify-between text-red-500"><span>Modal Bahan & Operasional:</span> <strong id="res-cost">Rp 0</strong></div>
+                            <div class="border-t border-slate-100 pt-2 flex justify-between text-emerald-600 text-sm">
+                                <span>Keuntungan Bersih:</span> <strong id="res-profit">Rp 0</strong>
+                            </div>
+                        </div>
+
+                        <button onclick="resetSimulation()" class="btn-bounce bg-emerald-500 hover:bg-emerald-600 text-white font-game font-bold px-6 py-2.5 rounded-xl shadow w-full">
+                            Mainkan Lagi & Masak Menu Lain
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 5: KUIS EVALUASI IPAS -->
+        <section id="page-kuis" class="space-y-6 hidden">
+            <div class="bg-white rounded-3xl p-6 md:p-8 border border-slate-200 card-shadow">
+                <!-- Quiz Container -->
+                <div id="quiz-intro-box">
+                    <div class="text-center max-w-xl mx-auto py-6">
+                        <div class="text-5xl mb-3">🎓</div>
+                        <h2 class="font-game text-2xl font-bold text-slate-800">Kuis Uji Pemahaman IPAS Kelas 5</h2>
+                        <p class="text-xs text-slate-500 mt-2 mb-6">Uji pemahamanmu mengenai Produksi, Distribusi, dan Konsumsi pada kegiatan ekonomi masyarakat Magetan.</p>
+                        <button onclick="startQuiz()" class="btn-bounce bg-emerald-500 hover:bg-emerald-600 text-white font-game font-bold px-8 py-3 rounded-2xl shadow-lg text-base">
+                            Mulai Kuis Sekarang
+                        </button>
+                    </div>
+                </div>
+
+                <div id="quiz-game-box" class="hidden">
+                    <div class="flex justify-between items-center border-b border-slate-100 pb-4 mb-6">
+                        <div>
+                            <span class="text-xs font-bold font-game uppercase text-emerald-600">Soal <span id="quiz-num">1</span> dari 5</span>
+                        </div>
+                        <div class="bg-amber-100 text-amber-800 text-xs font-game font-bold px-3 py-1 rounded-full">
+                            Skor: <span id="quiz-score">0</span>
+                        </div>
+                    </div>
+
+                    <h3 id="quiz-question-text" class="font-game text-lg font-bold text-slate-800 mb-6">
+                        Loading pertanyaan...
+                    </h3>
+
+                    <div id="quiz-options-container" class="grid grid-cols-1 gap-3 mb-6">
+                        <!-- Dynamic options -->
+                    </div>
+                </div>
+
+                <!-- Quiz Result / Certificate Box -->
+                <div id="quiz-result-box" class="hidden text-center py-6">
+                    <div class="bg-gradient-to-tr from-amber-50 via-emerald-50 to-sky-50 p-6 md:p-8 rounded-3xl border-2 border-amber-300 max-w-2xl mx-auto shadow-xl">
+                        <div class="text-5xl mb-2">🏆</div>
+                        <span class="text-xs font-bold uppercase tracking-wider text-amber-600 font-game">Sertifikat Kelulusan IPAS</span>
+                        <h3 class="font-game text-2xl font-bold text-slate-800 mt-1">Pahlawan Ekonomi Magetan</h3>
+                        <p class="text-xs text-slate-500 mt-1 mb-4">Selamat! Kamu telah menyelesaikan Kuis IPAS Kelas 5 tentang Kegiatan Ekonomi Daerahku.</p>
+
+                        <div class="bg-white p-4 rounded-2xl border border-slate-200 inline-block mb-6 shadow-sm">
+                            <div class="text-slate-400 text-xs">Nilai Akhir Kamu:</div>
+                            <div id="final-score" class="font-game text-4xl font-extrabold text-emerald-600">100</div>
+                        </div>
+
+                        <div class="flex flex-wrap justify-center gap-3">
+                            <button onclick="startQuiz()" class="btn-bounce bg-emerald-500 hover:bg-emerald-600 text-white font-game font-bold px-6 py-2.5 rounded-xl shadow">
+                                Ulangi Kuis
+                            </button>
+                            <button onclick="switchTab('simulasi')" class="btn-bounce bg-amber-500 hover:bg-amber-600 text-white font-game font-bold px-6 py-2.5 rounded-xl shadow">
+                                Main Simulasi Lagi
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500 mt-auto">
+        <p>© 2026 Media Pembelajaran IPAS Kelas 5 SD • Tema Kegiatan Ekonomi Daerahku (Kabupaten Magetan)</p>
+    </footer>
+
+    <script>
+        let audioCtx = null;
+        let soundEnabled = true;
+        let bgmEnabled = false;
+        let bgmInterval = null;
+
+        /* Tab Switcher Handler */
+        function switchTab(tabId) {
+            playSound('click');
+            const tabs = ['home', 'materi', 'sortier', 'simulasi', 'kuis'];
+            tabs.forEach(t => {
+                const page = document.getElementById(`page-${t}`);
+                const btn = document.getElementById(`tab-${t}`);
+                if (page) {
+                    if (t === tabId) {
+                        page.classList.remove('hidden');
+                    } else {
+                        page.classList.add('hidden');
+                    }
+                }
+                if (btn) {
+                    if (t === tabId) {
+                        btn.className = "nav-btn flex-1 py-2 px-2 md:px-4 rounded-xl font-game text-sm md:text-base flex items-center justify-center gap-2 transition text-emerald-600 bg-emerald-50 font-bold border border-emerald-200";
+                    } else {
+                        btn.className = "nav-btn flex-1 py-2 px-2 md:px-4 rounded-xl font-game text-sm md:text-base flex items-center justify-center gap-2 transition text-slate-600 hover:bg-slate-100";
+                    }
+                }
+            });
+
+            if (tabId === 'sortier') {
+                renderSortierCard();
+            }
+        }
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playSound(type) {
+            if (!soundEnabled) return;
+            initAudio();
+            if (!audioCtx) return;
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            const now = audioCtx.currentTime;
+
+            if (type === 'click') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(400, now);
+                osc.frequency.exponentialRampToValueAtTime(200, now + 0.08);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
+                osc.start(now);
+                osc.stop(now + 0.08);
+            } else if (type === 'correct') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(523.25, now);
+                osc.frequency.setValueAtTime(659.25, now + 0.08);
+                osc.frequency.setValueAtTime(783.99, now + 0.16);
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
+                osc.start(now);
+                osc.stop(now + 0.3);
+            } else if (type === 'wrong') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(220, now);
+                osc.frequency.setValueAtTime(180, now + 0.12);
+                gain.gain.setValueAtTime(0.25, now);
+                gain.gain.linearRampToValueAtTime(0.01, now + 0.25);
+                osc.start(now);
+                osc.stop(now + 0.25);
+            } else if (type === 'coin') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(987.77, now);
+                osc.frequency.setValueAtTime(1318.51, now + 0.08);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.linearRampToValueAtTime(0.01, now + 0.25);
+                osc.start(now);
+                osc.stop(now + 0.25);
+            } else if (type === 'cook') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(300 + Math.random() * 200, now);
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.linearRampToValueAtTime(0.01, now + 0.1);
+                osc.start(now);
+                osc.stop(now + 0.1);
+            }
+        }
+
+        function toggleAudio() {
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('sound-icon');
+            if (soundEnabled) {
+                icon.className = 'fa-solid fa-volume-high';
+                playSound('click');
+            } else {
+                icon.className = 'fa-solid fa-volume-xmark';
+            }
+        }
+
+        function toggleBGM() {
+            bgmEnabled = !bgmEnabled;
+            const icon = document.getElementById('music-icon');
+            if (bgmEnabled) {
+                icon.className = 'fa-solid fa-music text-emerald-600';
+                initAudio();
+                startBGM();
+            } else {
+                icon.className = 'fa-solid fa-music text-slate-400';
+                stopBGM();
+            }
+        }
+
+        function startBGM() {
+            if (bgmInterval) clearInterval(bgmInterval);
+            const notes = [261.63, 329.63, 392.00, 523.25, 392.00, 329.63];
+            let noteIdx = 0;
+            bgmInterval = setInterval(() => {
+                if (!bgmEnabled || !audioCtx) return;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                const now = audioCtx.currentTime;
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(notes[noteIdx], now);
+                gain.gain.setValueAtTime(0.03, now);
+                gain.gain.linearRampToValueAtTime(0.001, now + 0.3);
+                osc.start(now);
+                osc.stop(now + 0.3);
+                noteIdx = (noteIdx + 1) % notes.length;
+            }, 400);
+        }
+
+        function stopBGM() {
+            if (bgmInterval) {
+                clearInterval(bgmInterval);
+                bgmInterval = null;
+            }
+        }
+
+        let gameState = {
+            coins: 100,
+            badge: 'Pemula',
+            sortierScore: 0,
+            sortierCombo: 0,
+            sortierIndex: 0,
+            isSortierAnimating: false,
+            simMoney: 150000,
+            simServedCount: 0,
+            simSelectedMenu: null,
+            simSelectedIcon: '🍗',
+            simProductionCost: 0,
+            simEstimatedPrice: 0,
+            cookProgress: 0,
+            simTimerInterval: null,
+            simTimeLeft: 15,
+            quizScore: 0,
+            quizIndex: 0
+        };
+
+        // Data Cards for Game 1 (Sorting Game)
+        const sortierCards = [
+            {
+                icon: '🍊',
+                title: 'Pak Ahmad memetik Jeruk Pamelo segar dari kebunnya di Sukomoro Magetan.',
+                category: 'PRODUKSI',
+                reason: 'Memetik/memanen hasil pertanian adalah kegiatan menghasilkan barang (Produksi).'
+            },
+            {
+                icon: '🍗',
+                title: 'Ibu Suparni memanggang Ayam Bumbu Rujak Gandu dengan kayu bakar.',
+                category: 'PRODUKSI',
+                reason: 'Mengolah bahan makanan menjadi kuliner siap makan adalah kegiatan Produksi.'
+            },
+            {
+                icon: '🛵',
+                title: 'Pak Kurir mengantarkan paket Lempeng Puli goreng ke rumah pelanggan di Magetan.',
+                category: 'DISTRIBUSI',
+                reason: 'Mengantarkan barang dari pembuat ke pembeli adalah kegiatan Distribusi.'
+            },
+            {
+                icon: '😋',
+                title: 'Wisatawan memakan Sate Kelinci yang lezat di tepi Telaga Sarangan.',
+                category: 'KONSUMSI',
+                reason: 'Memakan/menghabiskan makanan untuk memenuhi kebutuhan hidup adalah Konsumsi.'
+            },
+            {
+                icon: '🛍️',
+                title: 'Pedagang oleh-oleh Jalan Sawo memajang Bolu Rahayu khas Magetan di etalase.',
+                category: 'DISTRIBUSI',
+                reason: 'Menjual/menyalurkan makanan dari pembuat ke konsumen adalah kegiatan Distribusi.'
+            },
+            {
+                icon: '🍘',
+                title: 'Pengrajin kerupuk puli mengukus adonan beras sebelum dijemur.',
+                category: 'PRODUKSI',
+                reason: 'Membuat adonan makanan adalah tahap awal kegiatan Produksi.'
+            },
+            {
+                icon: '🥤',
+                title: 'Siswa SD kelas 5 meminum es jus Jeruk Pamelo saat jam istirahat.',
+                category: 'KONSUMSI',
+                reason: 'Meminum es jus adalah menggunakan hasil produksi (Konsumsi).'
+            },
+            {
+                icon: '🚚',
+                title: 'Truk mengangkut karung Tepung Tapioka dari pabrik di Magetan ke Kota Surabaya.',
+                category: 'DISTRIBUSI',
+                reason: 'Pengangkutan barang antar kota merupakan kegiatan Distribusi.'
+            },
+            {
+                icon: '🥩',
+                title: 'Penjual Sate Kelinci memotong daging segar dan meracik bumbu kacang.',
+                category: 'PRODUKSI',
+                reason: 'Menyiapkan dan meracik masakan adalah kegiatan Produksi.'
+            },
+            {
+                icon: '👨‍👩‍👧',
+                title: 'Keluarga Budi menikmati santap malam Ayam Panggang Gandu.',
+                category: 'KONSUMSI',
+                reason: 'Menikmati hidangan makanan bersama keluarga adalah kegiatan Konsumsi.'
+            }
+        ];
+
+        /* Quiz Questions Data */
+        const quizQuestions = [
+            {
+                q: "Ibu Suparni mengolah daging ayam menjadi Ayam Panggang Gandu khas Magetan. Kegiatan yang dilakukan Ibu Suparni disebut...",
+                options: ["Produksi", "Distribusi", "Konsumsi", "Eksposisi"],
+                answer: 0
+            },
+            {
+                q: "Pak Kurir mengantarkan Lempeng Puli goreng dari produsen Magetan kepada pembeli melalui ekspedisi. Kegiatan ini termasuk...",
+                options: ["Konsumsi", "Produksi", "Distribusi", "Reorganisasi"],
+                answer: 2
+            },
+            {
+                q: "Wisatawan yang menikmati Sate Kelinci dan meminum Jus Jeruk Pamelo di Telaga Sarangan berperan sebagai...",
+                options: ["Produsen", "Distributor", "Konsumen", "Pengrajin"],
+                answer: 2
+            },
+            {
+                q: "Mengapa kegiatan ekonomi seperti pertanian Jeruk Pamelo dan warung makan sangat penting bagi daerah Magetan?",
+                options: [
+                    "Memenuhi kebutuhan hidup dan meningkatkan kesejahteraan warga",
+                    "Menghabiskan barang tanpa tujuan",
+                    "Mencegah wisatawan datang ke Magetan",
+                    "Mengurangi lapangan pekerjaan"
+                ],
+                answer: 0
+            },
+            {
+                q: "Seorang pedagang toko oleh-oleh Jalan Sawo Magetan membeli kue bolu rahayu dari pembuatnya lalu menjualnya ke turis. Pedagang tersebut melakukan kegiatan...",
+                options: ["Produksi", "Distribusi", "Konsumsi", "Asimilasi"],
+                answer: 1
+            }
+        ];
+
+        /* Drag and Drop Handlers for Sortier Game */
+        function handleDragStart(e) {
+            e.dataTransfer.setData('text/plain', 'sortier-card');
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('drop-target-active');
+        }
+
+        function handleDragLeave(e) {
+            e.currentTarget.classList.remove('drop-target-active');
+        }
+
+        function handleDrop(e, category) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drop-target-active');
+            checkSortAnswer(category);
+        }
+
+        /* Game 1: Sortier Mechanics */
+        function renderSortierCard() {
+            if (gameState.sortierIndex >= sortierCards.length) {
+                // Game Completed
+                document.getElementById('sortier-card-area').innerHTML = `
+                    <div class="text-center py-6">
+                        <div class="text-5xl mb-3">🎉🏆</div>
+                        <h3 class="font-game text-2xl font-bold text-slate-800">Luar Biasa!</h3>
+                        <p class="text-xs text-slate-600 mt-1 mb-4">Kamu berhasil mengelompokkan semua aktivitas ekonomi Magetan dengan skor ${gameState.sortierScore}/${sortierCards.length}!</p>
+                        <button onclick="resetSortierGame()" class="btn-bounce bg-emerald-500 hover:bg-emerald-600 text-white font-game font-bold px-6 py-2.5 rounded-xl shadow">
+                            Mainkan Lagi
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            const card = sortierCards[gameState.sortierIndex];
+            const iconElem = document.getElementById('sortier-icon');
+            const titleElem = document.getElementById('sortier-title');
+            
+            if (iconElem && titleElem) {
+                iconElem.innerText = card.icon;
+                titleElem.innerText = card.title;
+            }
+            
+            document.getElementById('sortier-cards-left').innerText = sortierCards.length - gameState.sortierIndex;
+            document.getElementById('sortier-score').innerText = gameState.sortierScore;
+            document.getElementById('sortier-combo').innerText = `x${gameState.sortierCombo}`;
+        }
+
+        function checkSortAnswer(selectedCategory) {
+            if (gameState.isSortierAnimating || gameState.sortierIndex >= sortierCards.length) return;
+            
+            gameState.isSortierAnimating = true;
+            const currentCard = sortierCards[gameState.sortierIndex];
+            const feedbackBox = document.getElementById('sortier-feedback');
+            
+            feedbackBox.classList.remove('hidden');
+
+            if (selectedCategory === currentCard.category) {
+                playSound('correct');
+                gameState.sortierScore++;
+                gameState.sortierCombo++;
+                const bonus = 10 + (gameState.sortierCombo > 1 ? gameState.sortierCombo * 2 : 0);
+                gameState.coins += bonus;
+                updateCoinDisplay();
+
+                feedbackBox.className = "mt-6 p-4 rounded-2xl text-center font-game text-xs md:text-sm bg-emerald-100 text-emerald-900 border border-emerald-300";
+                feedbackBox.innerHTML = `<strong>Tepat Sekali! 🎉 (+${bonus} Poin | Combo x${gameState.sortierCombo})</strong><br>${currentCard.reason}`;
+            } else {
+                playSound('wrong');
+                gameState.sortierCombo = 0;
+                feedbackBox.className = "mt-6 p-4 rounded-2xl text-center font-game text-xs md:text-sm bg-red-100 text-red-900 border border-red-300";
+                feedbackBox.innerHTML = `<strong>Kurang Tepat! 😅</strong><br>Jawaban benar: <strong>${currentCard.category}</strong>.<br>${currentCard.reason}`;
+            }
+
+            // Animate card transition smoothly
+            const cardElem = document.getElementById('sortier-card');
+            if (cardElem) {
+                cardElem.style.transform = 'scale(0.8) translateY(-20px)';
+                cardElem.style.opacity = '0.5';
+                setTimeout(() => {
+                    cardElem.style.transform = 'scale(1) translateY(0)';
+                    cardElem.style.opacity = '1';
+                    gameState.sortierIndex++;
+                    gameState.isSortierAnimating = false;
+                    renderSortierCard();
+                }, 900);
+            } else {
+                gameState.sortierIndex++;
+                gameState.isSortierAnimating = false;
+                renderSortierCard();
+            }
+        }
+
+        function resetSortierGame() {
+            gameState.sortierIndex = 0;
+            gameState.sortierScore = 0;
+            gameState.sortierCombo = 0;
+            gameState.isSortierAnimating = false;
+            document.getElementById('sortier-card-area').innerHTML = `
+                <div id="sortier-card" draggable="true" ondragstart="handleDragStart(event)" class="bg-white p-6 rounded-2xl border-2 border-sky-300 shadow-xl max-w-md mx-auto transition-all transform duration-300 cursor-grab active:cursor-grabbing hover:scale-105">
+                    <div class="text-xs text-slate-400 font-game mb-1">✋ Geser atau Tekan Tombol di Bawah</div>
+                    <div id="sortier-icon" class="text-5xl mb-3">🍊</div>
+                    <h3 id="sortier-title" class="font-game text-lg font-bold text-slate-800 mb-2">--</h3>
+                    <p id="sortier-desc" class="text-xs text-slate-500">Termasuk kategori manakah kegiatan ini?</p>
+                </div>
+            `;
+            document.getElementById('sortier-feedback').classList.add('hidden');
+            renderSortierCard();
+        }
+
+        function startCookingMinigame(menuName, cost, estPrice, icon) {
+            if (gameState.simMoney < cost) {
+                playSound('wrong');
+                alert('Kas warung tidak cukup untuk modal produksi menu ini!');
+                return;
+            }
+
+            playSound('click');
+            gameState.simSelectedMenu = menuName;
+            gameState.simProductionCost = cost;
+            gameState.simEstimatedPrice = estPrice;
+            gameState.simSelectedIcon = icon;
+            gameState.cookProgress = 0;
+
+            document.getElementById('cook-food-name').innerText = menuName;
+            document.getElementById('cook-food-icon').innerText = icon;
+            document.getElementById('cook-progress-bar').style.width = '0%';
+            document.getElementById('cooking-area').classList.remove('hidden');
+        }
+
+        function tapCookAction() {
+            playSound('cook');
+            gameState.cookProgress += 25;
+            if (gameState.cookProgress > 100) gameState.cookProgress = 100;
+            
+            document.getElementById('cook-progress-bar').style.width = `${gameState.cookProgress}%`;
+
+            if (gameState.cookProgress >= 100) {
+                playSound('correct');
+                setTimeout(() => {
+                    document.getElementById('cooking-area').classList.add('hidden');
+                    proceedToDistributionStage();
+                }, 400);
+            }
+        }
+
+        function proceedToDistributionStage() {
+            document.getElementById('selected-menu-name').innerText = gameState.simSelectedMenu;
+            document.getElementById('serve-price').innerText = gameState.simEstimatedPrice.toLocaleString('id-ID');
+
+            // Switch to Step 2
+            document.getElementById('sim-step-1').classList.add('hidden');
+            document.getElementById('sim-step-2').classList.remove('hidden');
+
+            document.getElementById('step-btn-1').className = "p-2.5 rounded-xl bg-emerald-100 text-emerald-800 font-bold";
+            document.getElementById('step-btn-2').className = "p-2.5 rounded-xl bg-sky-500 text-white font-bold shadow";
+
+            startCustomerServingTimer();
+        }
+
+        function startCustomerServingTimer() {
+            gameState.simTimeLeft = 15;
+            gameState.simServedCount = 0;
+            renderCustomersQueue();
+
+            if (gameState.simTimerInterval) clearInterval(gameState.simTimerInterval);
+
+            gameState.simTimerInterval = setInterval(() => {
+                gameState.simTimeLeft--;
+                document.getElementById('sim-timer').innerText = gameState.simTimeLeft;
+
+                if (gameState.simTimeLeft <= 0) {
+                    clearInterval(gameState.simTimerInterval);
+                    finishSimulationServing();
+                }
+            }, 1000);
+        }
+
+        function renderCustomersQueue() {
+            const container = document.getElementById('customer-cards-container');
+            container.innerHTML = `
+                <div class="bg-white p-3 rounded-2xl border border-sky-100 text-center shadow-sm">
+                    <div class="text-3xl mb-1">👨‍👩‍👦</div>
+                    <div class="font-game text-xs font-bold text-slate-800">Wisatawan Surabaya</div>
+                    <span class="text-[10px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">Pesan: ${gameState.simSelectedMenu}</span>
+                </div>
+                <div class="bg-white p-3 rounded-2xl border border-sky-100 text-center shadow-sm">
+                    <div class="text-3xl mb-1">🎒</div>
+                    <div class="font-game text-xs font-bold text-slate-800">Pelajar Solo</div>
+                    <span class="text-[10px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">Pesan: ${gameState.simSelectedMenu}</span>
+                </div>
+                <div class="bg-white p-3 rounded-2xl border border-sky-100 text-center shadow-sm">
+                    <div class="text-3xl mb-1">🧓</div>
+                    <div class="font-game text-xs font-bold text-slate-800">Kakek Magetan</div>
+                    <span class="text-[10px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">Pesan: ${gameState.simSelectedMenu}</span>
+                </div>
+            `;
+        }
+
+        function serveCustomerInteractive() {
+            if (gameState.simTimeLeft <= 0) return;
+
+            playSound('coin');
+            gameState.simServedCount++;
+            document.getElementById('sim-served-count').innerText = gameState.simServedCount;
+
+            // Visual feedback on serve button
+            const serveBtn = document.getElementById('serve-btn');
+            serveBtn.classList.add('scale-105');
+            setTimeout(() => serveBtn.classList.remove('scale-105'), 150);
+        }
+
+        function finishSimulationServing() {
+            playSound('correct');
+            const grossSale = gameState.simServedCount * gameState.simEstimatedPrice;
+            const totalCost = gameState.simProductionCost;
+            const profit = grossSale - totalCost;
+
+            gameState.simMoney += profit;
+            document.getElementById('sim-money').innerText = `Rp ${gameState.simMoney.toLocaleString('id-ID')}`;
+
+            document.getElementById('res-count').innerText = `${gameState.simServedCount} Porsi`;
+            document.getElementById('res-gross').innerText = `Rp ${grossSale.toLocaleString('id-ID')}`;
+            document.getElementById('res-cost').innerText = `Rp ${totalCost.toLocaleString('id-ID')}`;
+            document.getElementById('res-profit').innerText = `Rp ${profit.toLocaleString('id-ID')}`;
+
+            // Add bonus coins
+            gameState.coins += Math.max(10, gameState.simServedCount * 5);
+            updateCoinDisplay();
+
+            // Switch to Step 3
+            document.getElementById('sim-step-2').classList.add('hidden');
+            document.getElementById('sim-step-3').classList.remove('hidden');
+
+            document.getElementById('step-btn-2').className = "p-2.5 rounded-xl bg-sky-100 text-sky-800 font-bold";
+            document.getElementById('step-btn-3').className = "p-2.5 rounded-xl bg-amber-500 text-white font-bold shadow";
+        }
+
+        function resetSimulation() {
+            playSound('click');
+            if (gameState.simTimerInterval) clearInterval(gameState.simTimerInterval);
+
+            document.getElementById('sim-step-3').classList.add('hidden');
+            document.getElementById('sim-step-1').classList.remove('hidden');
+
+            document.getElementById('step-btn-1').className = "p-2.5 rounded-xl bg-emerald-500 text-white font-bold shadow";
+            document.getElementById('step-btn-2').className = "p-2.5 rounded-xl bg-slate-100 text-slate-500 font-bold";
+            document.getElementById('step-btn-3').className = "p-2.5 rounded-xl bg-slate-100 text-slate-500 font-bold";
+        }
+
+        /* Quiz Engine */
+        function startQuiz() {
+            playSound('click');
+            gameState.quizScore = 0;
+            gameState.quizIndex = 0;
+
+            document.getElementById('quiz-intro-box').classList.add('hidden');
+            document.getElementById('quiz-result-box').classList.add('hidden');
+            document.getElementById('quiz-game-box').classList.remove('hidden');
+
+            renderQuizQuestion();
+        }
+
+        function renderQuizQuestion() {
+            if (gameState.quizIndex >= quizQuestions.length) {
+                finishQuiz();
+                return;
+            }
+
+            const currentQ = quizQuestions[gameState.quizIndex];
+            document.getElementById('quiz-num').innerText = gameState.quizIndex + 1;
+            document.getElementById('quiz-score').innerText = gameState.quizScore;
+            document.getElementById('quiz-question-text').innerText = currentQ.q;
+
+            const optionsContainer = document.getElementById('quiz-options-container');
+            optionsContainer.innerHTML = '';
+
+            currentQ.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-2xl border-2 border-slate-200 hover:border-emerald-400 hover:bg-emerald-50/50 font-game text-sm transition btn-bounce";
+                btn.innerHTML = `<span class="inline-block w-7 h-7 bg-slate-100 text-slate-700 rounded-lg text-center leading-7 text-xs mr-2 font-bold">${String.fromCharCode(65 + idx)}</span> ${opt}`;
+                btn.onclick = () => handleQuizAnswer(idx);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function handleQuizAnswer(selectedIndex) {
+            const currentQ = quizQuestions[gameState.quizIndex];
+            if (selectedIndex === currentQ.answer) {
+                playSound('correct');
+                gameState.quizScore += 20;
+            } else {
+                playSound('wrong');
+            }
+
+            gameState.quizIndex++;
+            renderQuizQuestion();
+        }
+
+        function finishQuiz() {
+            playSound('coin');
+            document.getElementById('quiz-game-box').classList.add('hidden');
+            document.getElementById('quiz-result-box').classList.remove('hidden');
+            document.getElementById('final-score').innerText = gameState.quizScore;
+
+            if (gameState.quizScore >= 80) {
+                gameState.badge = 'Master Ekonomi';
+            } else {
+                gameState.badge = 'Penjelajah Muda';
+            }
+            document.getElementById('player-badge').innerText = gameState.badge;
+        }
+
+        function updateCoinDisplay() {
+            document.getElementById('player-coins').innerText = gameState.coins;
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            updateCoinDisplay();
+        };
+    </script>
+</body>
+</html>
